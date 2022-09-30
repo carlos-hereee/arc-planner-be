@@ -15,6 +15,10 @@ const userSchema = new Schema(
       type: Number,
       required: true,
     },
+    bot: {
+      type: Boolean,
+      required: true,
+    },
   },
   { timestamps: true }
 );

@@ -3,29 +3,32 @@ const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const server = express();
+const app = express();
 const usersRouter = require("./router/users");
 
 // express app
-server.use(helmet());
-server.use(cors());
-server.use(express.json());
-server.use("/users", usersRouter);
+app.use(helmet());
+app.use(cors());
+app.use(express.json());
+app.use("/users", usersRouter);
 
 // connect to mongodb
-const dbURI = `mongodb+srv://${process.env.MG_USER}:${process.env.MG_PASSWORD}@cluster0.08fu7.mongodb.net/Cluster0?retryWrites=true&w=majority`;
+const uri = process.env.DB_URI;
 const port = process.env.PORT;
+const env = process.env.DB_ENV;
 
 mongoose
-  .connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() =>
-    server.listen(port, () =>
-      console.log(`\n*** Listening on port ${port}***\n`)
-    )
-  )
+  .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    app.listen(port, () => {
+      if (env !== "production") {
+        console.log(`\n*** Listening on port ${port}***\n`);
+      }
+    });
+  })
   .catch((err) => console.log("err", err));
 
-server.get("/", (req, res) => {
+app.get("/", (req, res) => {
   res.status(202).send({
     api: "Rise of Kingdoms api",
     paths: ["/users/", "/alliance/"],
