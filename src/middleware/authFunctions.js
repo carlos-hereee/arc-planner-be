@@ -18,7 +18,6 @@ const generateRefreshToken = (user) => {
 };
 
 module.exports = {
-  useableUserData,
   generateAccessToken,
   generateRefreshToken,
   refreshTokenSecret,

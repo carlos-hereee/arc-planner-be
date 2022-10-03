@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const Users = require("../models/users");
-const { refreshTokenSecret } = require("./authFunction");
+const { refreshTokenSecret } = require("./authFunctions");
 
 module.exports = async (req, res, next) => {
   const cookie = req.cookies["secret-cookie"];
