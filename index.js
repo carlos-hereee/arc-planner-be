@@ -4,7 +4,7 @@ const helmet = require("helmet");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const app = express();
-const usersRouter = require("./router/users");
+const usersRouter = require("./src/router/users");
 
 // express app
 app.use(helmet());
@@ -30,7 +30,7 @@ mongoose
 
 app.get("/", (req, res) => {
   res.status(202).send({
-    api: "Rise of Kingdoms api",
+    name: "rok planner api",
     paths: ["/users/", "/alliance/"],
   });
 });
