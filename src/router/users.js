@@ -39,10 +39,12 @@ router.post("/register", registrationCred, async (req, res) => {
   user.uid = uuidv4();
   user.nickname = user.username;
   user.isOnline = true;
+  console.log("user", user);
   try {
     const newUser = await new Users(user).save();
     const refreshToken = generateRefreshToken(newUser);
     const accessToken = generateAccessToken(newUser);
+    console.log("newUser", newUser);
     res.cookie("secret-cookie", refreshToken, { httpOnly: true });
     res.status(200).json({ user: newUser, accessToken });
   } catch (e) {

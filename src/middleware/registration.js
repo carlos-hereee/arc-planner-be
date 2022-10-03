@@ -11,5 +11,7 @@ module.exports = async (req, res, next) => {
     } else {
       next();
     }
-  } catch {}
+  } catch (err) {
+    res.status(500).json({ message: "Servers are down" });
+  }
 };
