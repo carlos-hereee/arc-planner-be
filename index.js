@@ -6,17 +6,18 @@ const mongoose = require("mongoose");
 const app = express();
 const usersRouter = require("./src/router/users");
 
-// express app
-app.use(helmet());
-app.use(cors());
-app.use(express.json());
-app.use("/users", usersRouter);
-
 // connect to mongodb
 const uri = process.env.DB_URI;
 const port = process.env.PORT;
 const env = process.env.DB_ENV;
+const clientURL = process.env.CLIENT_URL;
 
+// express app
+app.use(helmet());
+app.use(cors({ credentials: true, origin: clientURL }));
+app.use(express.json());
+
+app.use("/users", usersRouter);
 mongoose
   .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
