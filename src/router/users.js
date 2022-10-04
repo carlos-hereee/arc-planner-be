@@ -39,12 +39,10 @@ router.post("/register", registrationCred, async (req, res) => {
   user.uid = uuidv4();
   user.nickname = user.username;
   user.isOnline = true;
-  console.log("user", user);
   try {
     const newUser = await new Users(user).save();
     const refreshToken = generateRefreshToken(newUser);
     const accessToken = generateAccessToken(newUser);
-    console.log("newUser", newUser);
     res.cookie("secret-cookie", refreshToken, { httpOnly: true });
     res.status(200).json({ user: newUser, accessToken });
   } catch (e) {
@@ -59,13 +57,13 @@ router.post("/login", async (req, res) => {
       const refreshToken = generateRefreshToken(user);
       const accessToken = generateAccessToken(user);
       changeOnline(true, user._id);
-      const data = await Users.findOne({ username });
       res.status(200).cookie("secret-cookie", refreshToken, { httpOnly: true });
-      res.json({ user: data, accessToken: accessToken });
+      res.json({ user, accessToken: accessToken });
     } else {
       res.status(404).json({ message: "username or password are invalid" });
     }
-  } catch {
+  } catch (err) {
+    console.log("err", err);
     res.status(400).json({ message: "User does not exist" });
   }
 });
