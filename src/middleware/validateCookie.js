@@ -1,13 +1,13 @@
-const jwt = require("jsonwebtoken");
+const jsonWebToken = require("jsonwebtoken");
+const { accessTokenSecret } = require("../../server.config");
 const Users = require("../models/users");
-const { refreshTokenSecret } = require("./authFunctions");
 
 module.exports = async (req, res, next) => {
-  const cookie = req.cookies["secret-cookie"];
-  if (!cookie) {
-    return res.status(400).json({ accessToken: "" });
+  const token = req.cookies.accessToken;
+  if (!token) {
+    return res.status(403).json({ accessToken: "" });
   }
-  let payload = jwt.verify(cookie, refreshTokenSecret);
+  let payload = jsonWebToken.verify(token, accessTokenSecret);
   const user = await Users.findOne({
     $or: [{ username: payload.username }, { uid: payload.uid }],
   });
