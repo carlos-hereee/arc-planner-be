@@ -3,10 +3,15 @@ const router = require("express").Router();
 const Kingdoms = require("../models/kingdom");
 const { v4: uuidv4 } = require("uuid");
 const validateCookie = require("../middleware/validateCookie");
-
-router.get("/", validateCookie, (req, res) => {
-  // list all kingdoms
-  // res.status(200).json(req.user);
+const { serversAreDown, successMessage } = require("./message.config");
+router.get("/all", validateCookie, async (_, res) => {
+  try {
+    const data = await Kingdoms.find();
+    res.status(200).json(data);
+  } catch (e) {
+    console.log("e", e);
+    res.status(500).json({ message: serversAreDown });
+  }
 });
 
 router.post("/", validateCookie, async (req, res) => {
@@ -18,9 +23,9 @@ router.post("/", validateCookie, async (req, res) => {
   };
   try {
     await new Kingdoms(schema).save();
-    res.status(201).json({ message: "Succesfully created kingdom" });
+    res.status(201).json({ message: successMessage });
   } catch {
-    res.status(500).json({ message: "Servers are down try again later" });
+    res.status(500).json({ message: serversAreDown });
   }
 });
 
