@@ -3,14 +3,12 @@ const Schema = mongoose.Schema;
 
 const eventSchema = new Schema(
   {
-    eventName: {
-      type: String,
-      required: true,
-    },
-    discordServerId: {
-      type: Number,
-      required: true,
-    },
+    uid: { type: String, required: true },
+    name: { type: String, required: true },
+    description: { type: String },
+    kingdomId: { type: String },
+    allianceId: { type: String },
+    discordId: { type: Number, required: true },
   },
   { timestamps: true }
 );

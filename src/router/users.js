@@ -10,7 +10,7 @@ const changeOnline = async (isOnline, _id) => {
   await Users.updateOne({ _id }, { $set: { isOnline } });
 };
 // authenticate
-router.get("/", async (req, res) => {
+router.get("/", (req, res) => {
   res.status(200).json(req.user);
 });
 router.get("/:uid", validateCookie, async (req, res) => {
