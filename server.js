@@ -5,6 +5,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const { expressjwt: jwt } = require("express-jwt");
 const cookieParser = require("cookie-parser");
+const bodyParser = require("body-parser");
 const {
   uri,
   port,
@@ -19,6 +20,8 @@ const app = express();
 // express app
 app.use(helmet());
 app.use(cookieParser());
+app.use(bodyParser.json());
+app.use(bodyParser.text());
 app.use(express.json());
 app.use(cors({ credentials: true, origin: clientURL }));
 app.use("/users", usersRouter);

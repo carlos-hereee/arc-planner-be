@@ -13,6 +13,6 @@ const kingdomSchema = new Schema(
   { timestamps: true }
 );
 
-const kingdom = mongoose.model("kingdom", kingdomSchema);
+const Kingdom = mongoose.model("kingdom", kingdomSchema);
 
-module.exports = kingdom;
+module.exports = Kingdom;
