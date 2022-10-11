@@ -9,7 +9,6 @@ const validateCookie = require("../middleware/validateCookie");
 const changeOnline = async (isOnline, _id) => {
   await Users.updateOne({ _id }, { $set: { isOnline } });
 };
-// authenticate
 router.get("/", (req, res) => {
   res.status(200).json(req.user);
 });
@@ -56,7 +55,6 @@ router.post("/login", async (req, res) => {
       res.status(404).json({ message: "username or password are invalid" });
     }
   } catch (err) {
-    console.log("err", err);
     res.status(400).json({ message: "User does not exist" });
   }
 });

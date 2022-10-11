@@ -3,7 +3,6 @@ const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
 const mongoose = require("mongoose");
-// const csurf = require("csurf");
 const { expressjwt: jwt } = require("express-jwt");
 const cookieParser = require("cookie-parser");
 const {
@@ -14,16 +13,16 @@ const {
   accessTokenSecret,
 } = require("./server.config");
 const usersRouter = require("./src/router/users");
+const kingdomRouter = require("./src/router/kingdom");
 
 const app = express();
-// const csrfProtection = csurf({ cookie: true });
 // express app
 app.use(helmet());
 app.use(cookieParser());
 app.use(express.json());
 app.use(cors({ credentials: true, origin: clientURL }));
-// app.use(csrfProtection);
 app.use("/users", usersRouter);
+app.use("/kingdom", kingdomRouter);
 app.use(
   jwt({
     secret: accessTokenSecret,
