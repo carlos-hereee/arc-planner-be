@@ -5,6 +5,9 @@ const kingdomSchema = new Schema(
   {
     uid: { type: String, unique: true },
     name: { type: String },
+    announcement: { type: String },
+    kingName: { type: String },
+    kingId: { type: String },
     discordId: { type: Number },
   },
   { timestamps: true }
