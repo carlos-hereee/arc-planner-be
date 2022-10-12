@@ -23,6 +23,8 @@ const userSchema = new Schema(
     kingdomId: { type: String },
     discordId: { type: Number },
     isT5: { type: Boolean },
+    isKing: { type: Boolean },
+    isOfficer: { type: Boolean },
     isOnline: { type: Boolean },
     isBot: { type: Boolean },
   },

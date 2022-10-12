@@ -9,7 +9,7 @@ const validateCookie = require("../middleware/validateCookie");
 const changeOnline = async (isOnline, _id) => {
   await Users.updateOne({ _id }, { $set: { isOnline } });
 };
-router.get("/", (req, res) => {
+router.get("/", validateCookie, (req, res) => {
   res.status(200).json(req.user);
 });
 router.get("/:uid", validateCookie, async (req, res) => {

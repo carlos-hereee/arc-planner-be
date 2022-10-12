@@ -1,5 +1,5 @@
 const router = require("express").Router();
-// const Users = require("../models/users");
+const Users = require("../models/users");
 const Kingdoms = require("../models/kingdom");
 const { v4: uuidv4 } = require("uuid");
 const validateCookie = require("../middleware/validateCookie");
@@ -76,6 +76,10 @@ router.post("/", validateCookie, async (req, res) => {
   };
   try {
     await new Kingdoms(schema).save();
+    await Users.updateOne(
+      { uid: req.user.uid },
+      { kingdomId: schema.uid, isKing: true }
+    );
     res.status(201).json({ message: successMessage });
   } catch {
     res.status(500).json({ message: serversAreDown });
