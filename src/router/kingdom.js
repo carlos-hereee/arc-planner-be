@@ -25,6 +25,21 @@ router.get("/user-application", validateCookie, async (req, res) => {
     res.status(500).json({ message: serversAreDown });
   }
 });
+router.put("/search", validateCookie, async (req, res) => {
+  try {
+    const kingdom = await Kingdoms.find();
+    const filterList = kingdom.filter((kl) => {
+      return (
+        kl.name.match(req.body.search) ||
+        kl.kingName.match(req.body.search) ||
+        kl.announcement.match(req.body.search)
+      );
+    });
+    res.status(200).json(filterList);
+  } catch {
+    res.status(500).json({ message: serversAreDown });
+  }
+});
 router.delete("/user-application/:id", validateCookie, async (req, res) => {
   const data = {
     userId: req.user.uid,
