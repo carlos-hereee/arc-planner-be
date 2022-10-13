@@ -14,6 +14,15 @@ router.get("/all", validateCookie, async (_, res) => {
     res.status(500).json({ message: serversAreDown });
   }
 });
+router.get("/:id", validateCookie, async (req, res) => {
+  const kingdomId = req.params.id;
+  try {
+    const data = await Kingdoms.findOne({ uid: kingdomId });
+    res.status(200).json(data);
+  } catch {
+    res.status(500).json({ message: serversAreDown });
+  }
+});
 router.get("/user-application", validateCookie, async (req, res) => {
   try {
     const data = await Applications.find({
