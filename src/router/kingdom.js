@@ -48,34 +48,19 @@ router.get("/search/:search", validateCookie, async (req, res) => {
     res.status(500).json({ message: serversAreDown });
   }
 });
-router.put("/filter", validateCookie, async (req, res) => {
+router.get("/alliance/apply", validateCookie, async (req, res) => {
   try {
-    const kingdom = await Kingdoms.find();
-    const filterList = kingdom.filter((kl) => {
-      return (
-        kl.name.match(req.body.search) ||
-        kl.kingName.match(req.body.search) ||
-        kl.announcement.match(req.body.search)
-      );
+    const data = await Applications.find({
+      kingdomId: req.user.kingdomId,
+      userId: req.user.uid,
+      type: "alliance",
     });
-    res.status(200).json(filterList);
+    res.status(200).json(data);
   } catch {
     res.status(500).json({ message: serversAreDown });
   }
 });
-router.delete("/user-application/:id", validateCookie, async (req, res) => {
-  const data = {
-    userId: req.user.uid,
-    type: "kingdom",
-    kingdomId: req.params.id,
-  };
-  try {
-    await Applications.deleteOne(data);
-    res.status(200).json({ message: successMessage });
-  } catch {
-    res.status(500).json({ message: serversAreDown });
-  }
-});
+
 router.post("/apply", validateCookie, async (req, res) => {
   const schema = {
     uid: uuidv4(),
@@ -105,6 +90,63 @@ router.post("/", validateCookie, async (req, res) => {
       { kingdomId: schema.uid, isKing: true }
     );
     res.status(201).json({ message: successMessage });
+  } catch {
+    res.status(500).json({ message: serversAreDown });
+  }
+});
+router.post("/alliance", validateCookie, async (req, res) => {
+  const schema = {
+    ...req.body.values,
+    uid: uuidv4(),
+    kingdomId: req.user.kingdomId,
+    kingdomNumber: req.user.kingdomNumber,
+  };
+  try {
+    await new Alliances(schema).save();
+    res.status(201).json({ message: successMessage });
+  } catch {
+    res.status(500).json({ message: serversAreDown });
+  }
+});
+router.post("/alliance/apply", validateCookie, async (req, res) => {
+  const schema = {
+    uid: uuidv4(),
+    type: "alliance",
+    kingdomId: req.user.kingdomId,
+    userId: req.user.uid,
+    allianceId: req.body.values.uid,
+  };
+  try {
+    await new Applications(schema).save();
+    res.status(201).json({ message: successMessage });
+  } catch {
+    res.status(500).json({ message: serversAreDown });
+  }
+});
+router.put("/filter", validateCookie, async (req, res) => {
+  try {
+    const kingdom = await Kingdoms.find();
+    const filterList = kingdom.filter((kl) => {
+      return (
+        kl.name.match(req.body.search) ||
+        kl.kingName.match(req.body.search) ||
+        kl.announcement.match(req.body.search)
+      );
+    });
+    res.status(200).json(filterList);
+  } catch {
+    res.status(500).json({ message: serversAreDown });
+  }
+});
+router.delete("/user-application/:id", validateCookie, async (req, res) => {
+  const data = {
+    userId: req.user.uid,
+    type: "kingdom",
+    kingdomId: req.params.id,
+  };
+  try {
+    await Applications.deleteOne(data);
+    res.status(200).json({ message: successMessage });
   } catch {
     res.status(500).json({ message: serversAreDown });
   }

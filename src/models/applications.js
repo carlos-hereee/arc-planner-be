@@ -6,6 +6,7 @@ const applicationSchema = new Schema(
     uid: { type: String, required: true },
     type: { type: String, required: true },
     kingdomId: { type: String },
+    allianceId: { type: String },
     userId: { type: String },
   },
   { timestamps: true }
