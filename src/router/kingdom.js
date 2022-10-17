@@ -24,7 +24,7 @@ router.get("/:id", validateCookie, async (req, res) => {
     res.status(500).json({ message: serversAreDown });
   }
 });
-router.get("/user-application", validateCookie, async (req, res) => {
+router.get("/applications", validateCookie, async (req, res) => {
   try {
     const data = await Applications.find({
       userId: req.user.uid,
@@ -60,7 +60,6 @@ router.get("/alliance/apply", validateCookie, async (req, res) => {
     res.status(500).json({ message: serversAreDown });
   }
 });
-
 router.post("/apply", validateCookie, async (req, res) => {
   const schema = {
     uid: uuidv4(),
@@ -138,11 +137,25 @@ router.put("/filter", validateCookie, async (req, res) => {
     res.status(500).json({ message: serversAreDown });
   }
 });
-router.delete("/user-application/:id", validateCookie, async (req, res) => {
+router.delete("/applications/:id", validateCookie, async (req, res) => {
   const data = {
     userId: req.user.uid,
     type: "kingdom",
     kingdomId: req.params.id,
+  };
+  try {
+    await Applications.deleteOne(data);
+    res.status(200).json({ message: successMessage });
+  } catch {
+    res.status(500).json({ message: serversAreDown });
+  }
+});
+router.delete("/alliance/apply/:id", validateCookie, async (req, res) => {
+  const data = {
+    type: "alliance",
+    userId: req.user.uid,
+    allianceId: req.params.id,
+    kingdomId: req.user.kingdomId,
   };
   try {
     await Applications.deleteOne(data);
