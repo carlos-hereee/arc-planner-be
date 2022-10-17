@@ -1,9 +1,10 @@
 const router = require("express").Router();
-const Users = require("../models/users");
-const Kingdoms = require("../models/kingdom");
 const { v4: uuidv4 } = require("uuid");
 const validateCookie = require("../middleware/validateCookie");
 const { serversAreDown, successMessage } = require("./message.config");
+const Users = require("../models/users");
+const Kingdoms = require("../models/kingdom");
+const Alliances = require("../models/alliance");
 const Applications = require("../models/applications");
 
 router.get("/all", validateCookie, async (_, res) => {
@@ -34,7 +35,20 @@ router.get("/user-application", validateCookie, async (req, res) => {
     res.status(500).json({ message: serversAreDown });
   }
 });
-router.put("/search", validateCookie, async (req, res) => {
+router.get("/search/:search", validateCookie, async (req, res) => {
+  const { search } = req.params;
+  try {
+    const kingdomFilteredList = {
+      alliance: await Alliances.find({ kingdomId: req.user.kingdomId }),
+      members: await Users.find({ kingdomId: req.user.kingdomId }),
+      applicants: await Applications.find({ kingdomId: req.user.kingdomId }),
+    };
+    res.status(200).json(kingdomFilteredList[search]);
+  } catch {
+    res.status(500).json({ message: serversAreDown });
+  }
+});
+router.put("/filter", validateCookie, async (req, res) => {
   try {
     const kingdom = await Kingdoms.find();
     const filterList = kingdom.filter((kl) => {

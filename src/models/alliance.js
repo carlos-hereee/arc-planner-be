@@ -13,6 +13,6 @@ const allianceSchema = new Schema(
   { timestamps: true }
 );
 
-const Alliance = mongoose.model("alliance", allianceSchema);
+const Alliances = mongoose.model("alliance", allianceSchema);
 
-module.exports = Alliance;
+module.exports = Alliances;
