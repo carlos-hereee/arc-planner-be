@@ -21,6 +21,7 @@ const userSchema = new Schema(
     dead: { type: Number, default: 0 },
     allianceId: { type: String },
     kingdomId: { type: String },
+    kingdomNumber: { type: Number },
     discordId: { type: Number },
     isT5: { type: Boolean },
     isKing: { type: Boolean },

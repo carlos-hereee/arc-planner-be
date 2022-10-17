@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const kingdomSchema = new Schema(
   {
     uid: { type: String, unique: true },
-    name: { type: String },
+    number: { type: Number },
     announcement: { type: String },
     kingName: { type: String },
     kingId: { type: String },

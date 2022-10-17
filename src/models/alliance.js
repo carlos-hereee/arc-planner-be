@@ -6,8 +6,9 @@ const allianceSchema = new Schema(
     uid: { type: String, unique: true },
     name: { type: String },
     tag: { type: String },
-    description: { type: String },
+    announcement: { type: String },
     kingdomId: { type: String },
+    kingdomNumber: { type: Number },
     discordId: { type: Number },
   },
   { timestamps: true }

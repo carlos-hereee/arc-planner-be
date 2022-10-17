@@ -101,6 +101,7 @@ router.post("/", validateCookie, async (req, res) => {
     await new Kingdoms(schema).save();
     await Users.updateOne(
       { uid: req.user.uid },
+      { kingdomNumber: req.body.number },
       { kingdomId: schema.uid, isKing: true }
     );
     res.status(201).json({ message: successMessage });
