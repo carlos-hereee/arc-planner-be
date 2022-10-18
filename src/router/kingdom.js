@@ -7,6 +7,14 @@ const Kingdoms = require("../models/kingdom");
 const Alliances = require("../models/alliance");
 const Applications = require("../models/applications");
 
+router.get("/", validateCookie, async (req, res) => {
+  try {
+    const data = await Kingdoms.findOne({ uid: req.user.kingdomId });
+    res.status(200).json(data);
+  } catch {
+    res.status(500).json({ message: serversAreDown });
+  }
+});
 router.get("/all", validateCookie, async (_, res) => {
   try {
     const data = await Kingdoms.find();
@@ -15,10 +23,20 @@ router.get("/all", validateCookie, async (_, res) => {
     res.status(500).json({ message: serversAreDown });
   }
 });
-router.get("/:id", validateCookie, async (req, res) => {
-  const kingdomId = req.params.id;
+router.get("/members", validateCookie, async (req, res) => {
   try {
-    const data = await Kingdoms.findOne({ uid: kingdomId });
+    const data = await Users.find({ kingdomId: req.user.kingdomId });
+    res.status(200).json(data);
+  } catch {
+    res.status(500).json({ message: serversAreDown });
+  }
+});
+router.get("/applicants", validateCookie, async (req, res) => {
+  try {
+    const data = await Applications.find({
+      type: "kingdom",
+      kingdomId: req.user.kingdomId,
+    });
     res.status(200).json(data);
   } catch {
     res.status(500).json({ message: serversAreDown });
@@ -35,20 +53,15 @@ router.get("/applications", validateCookie, async (req, res) => {
     res.status(500).json({ message: serversAreDown });
   }
 });
-router.get("/search/:search", validateCookie, async (req, res) => {
-  const { search } = req.params;
+router.get("/alliance", validateCookie, async (req, res) => {
   try {
-    const kingdomFilteredList = {
-      alliance: await Alliances.find({ kingdomId: req.user.kingdomId }),
-      members: await Users.find({ kingdomId: req.user.kingdomId }),
-      applicants: await Applications.find({ kingdomId: req.user.kingdomId }),
-    };
-    res.status(200).json(kingdomFilteredList[search]);
+    const data = await Alliances.find({ kingdomId: req.user.kingdomId });
+    res.status(200).json(data);
   } catch {
     res.status(500).json({ message: serversAreDown });
   }
 });
-router.get("/alliance/apply", validateCookie, async (req, res) => {
+router.get("/alliance/applications", validateCookie, async (req, res) => {
   try {
     const data = await Applications.find({
       kingdomId: req.user.kingdomId,
