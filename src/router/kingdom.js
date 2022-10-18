@@ -98,8 +98,7 @@ router.post("/", validateCookie, async (req, res) => {
     await new Kingdoms(schema).save();
     await Users.updateOne(
       { uid: req.user.uid },
-      { kingdomNumber: req.body.number },
-      { kingdomId: schema.uid, isKing: true }
+      { kingdomNumber: req.body.number, kingdomId: schema.uid, isKing: true }
     );
     res.status(201).json({ message: successMessage });
   } catch {
@@ -115,6 +114,7 @@ router.post("/alliance", validateCookie, async (req, res) => {
   };
   try {
     await new Alliances(schema).save();
+    await Users.updateOne({ uid: req.user.uid }, { allianceId: schema.uid });
     res.status(201).json({ message: successMessage });
   } catch {
     res.status(500).json({ message: serversAreDown });
@@ -166,6 +166,10 @@ router.delete("/", validateCookie, async (req, res) => {
     await Kingdoms.deleteOne({ uid: req.user.kingdomId });
     await Alliances.deleteMany({ uid: req.user.kingdomId });
     await Applications.deleteMany({ uid: req.user.kingdomId });
+    await Users.updateOne(
+      { uid: req.user.uid },
+      { kingdomId: "", kingdomNumber: "", allianceId: "" }
+    );
     res.status(200).json({ message: successMessage });
   } catch {
     res.status(500).json({ message: serversAreDown });
